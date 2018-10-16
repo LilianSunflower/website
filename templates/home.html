@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    崎夏
+{% endblock %}
+
+{% block head_extends %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+    <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+{% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+{% block content %}
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+				    <h3 class="home-content">欢迎来到我的首页，随便看</h3>
+				    <!-- 图表容器 DOM -->
+				    <div id="container"></div>
+				</div>
+				<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+			    	<!-- 热门博客 -->
+				    <div class="panel panel-default">
+						<div class="panel-heading">今日热门</div>
+							<!-- List group -->
+							<ul class="list-group">
+								{% for hot in today_hot %}
+									<li class="list-group-item"><a href="{% url 'article_detail' hot.content_object.id %}">{{ hot.content_object.title }}</a>({{ hot.read_num }})</li>
+							    {% empty %}
+							    	<li class="list-group-item">暂无热门博文</li>
+							    {% endfor %}
+						  	</ul>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">昨日热门</div>
+							<!-- List group -->
+							<ul class="list-group">
+								{% for hot in yesterday_hot %}
+									<li class="list-group-item"><a href="{% url 'article_detail' hot.content_object.id %}">{{ hot.content_object.title }}</a>({{ hot.read_num }})</li>
+							    {% empty %}
+							    	<li class="list-group-item">暂无热门博文</li>
+							    {% endfor %}
+						  	</ul>
+					</div>
+				    <div class="panel panel-default">
+						<div class="panel-heading">本周热门</div>
+							<!-- List group -->
+							<ul class="list-group">
+								{% for hot in week_hot %}
+									<li class="list-group-item"><a href="{% url 'article_detail' hot.id %}">{{ hot.title }}</a>({{ hot.read_num_sum }})</li>
+							    {% empty %}
+							    	<li class="list-group-item">暂无热门博文</li>
+							    {% endfor %}
+						  	</ul>
+					</div>
+				    <div class="panel panel-default">
+						<div class="panel-heading">本月热门</div>
+							<!-- List group -->
+							<ul class="list-group">
+								{% for hot in month_hot %}
+									<li class="list-group-item"><a href="{% url 'article_detail' hot.id %}">{{ hot.title }}</a>({{ hot.read_num_sum }})</li>
+							    {% empty %}
+							    	<li class="list-group-item">暂无热门博文</li>
+							    {% endfor %}
+						  	</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	<script>
+        // 图表配置
+        var options = {
+            chart: { type: 'line' },
+            title: { text: null },
+            xAxis: {
+            	title: { text: '上周阅读情况' },
+                categories: {{ days|safe }},
+                tickmarkPlacement: 'on',
+            },
+            yAxis: {
+                title: { text: null },
+                gridLineDashStyle: 'Dash',
+                labels: { enabled: false },
+            },
+            series: [{
+                name: '阅读量',
+                data: {{ readdetails }}
+            }],
+            plotOptions: {
+            	line:{
+            		dataLabels: {
+            			enabled: true
+            		}
+            	}
+            },
+            legend: { enabled: false },
+            credits: { enabled: false },
+        };
+        // 图表初始化函数
+        var chart = Highcharts.chart('container', options);
+    </script>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+个人资料
+{% endblock %}
+
+{% block head_extends %}
+<link href="{% static 'css/cropper.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/sitelogo.css' %}" rel="stylesheet" >
+<script src="{% static 'js/cropper.min.js' %}"></script>
+<script src="{% static 'js/sitelogo.js' %}"></script>
+<style type="text/css">
+	div.item{
+		margin-top: 10pt;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><b>{{ user.username }}</b>的个人资料</h3>
+				</div>
+				<div class="panel-body">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-xs-12">
+								<div style="margin-left: 40px;margin-top: 20px;">
+									<p>欢迎回家, {{ user.username }}.
+										{% if user.email %}
+											{% if not user.profile.account_verified %}
+												(未认证邮箱)
+											{% else %}
+												{{ user.email }}
+											{% endif %}
+										{% else %}
+											(未<a href="">绑定邮箱</a>)
+										{% endif %}
+									</p>
+									<p>
+										上次登录时间：{{ user.last_login|date:"Y-m-d H:i:s" }}
+									</p>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-3">
+								
+									<div class="ibox-content">
+										<div class="row">
+											<div id="crop-avatar" class="col-xs-6 col-xs-offset-1 col-sm-6 col-sm-offset-2" style="margin-top: 70px;">
+												<div class="avatar-view" title="点击更换头像" >
+													<img src="{{ user.profile.avatar.url }}" >
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
+										<div class="modal-dialog modal-lg">
+											<div class="modal-content">
+												<form class="avatar-form" action="{% url 'myaccount:ajax_avatar_upload' %}" enctype="multipart/form-data" method="post">
+													<div class="modal-header">
+														<button class="close" data-dismiss="modal" type="button">&times;</button>
+														<h4 class="modal-title" id="avatar-modal-label">上传头像</h4>
+													</div>
+													<div class="modal-body">
+														<div class="avatar-body">
+															<div class="avatar-upload">
+																<input class="avatar-src" name="avatar_src" type="hidden">
+																<input class="avatar-data" name="avatar_data" type="hidden">
+																<label for="avatarInput">图片上传</label>
+																<input class="avatar-input" id="avatarInput" name="avatar_file" type="file">
+															</div>
+															<div class="row">
+																<div class="col-md-9">
+																	<div class="avatar-wrapper">
+																	</div>
+																</div>
+																<div class="col-md-3">
+																	<div class="avatar-preview preview-lg"></div>
+																	<div class="avatar-preview preview-md"></div>
+																	<div class="avatar-preview preview-sm"></div>
+																</div>
+															</div>
+															<div class="row avatar-btns">
+																<div class="col-md-9">
+																	<div class="btn-group">
+																		<button class="btn" data-method="zoom" data-option="0.1" type="button" title="放大图片"><i class="fa fa-repeat"></i>放大图片</button>
+																	</div>
+																	<div class="btn-group">
+																		<button class="btn" data-method="zoom" data-option="-0.1" type="button" title="缩小图片"><i class="fa fa-repeat"></i> 缩小图片</button>
+																	</div>
+																	<div class="btn-group">
+																		<button class="btn" data-method="setDragMode" data-option="move" type="button" title="移动图片"><i class="fa fa-repeat"></i> 移动图片</button>
+																	</div>
+																</div>
+																<div class="col-md-3">
+																	<button class="btn btn-success btn-block avatar-save" type="submit"><i class="fa fa-save"></i>保存修改</button>
+																</div>
+															</div>
+														</div>
+													</div>
+													{% csrf_token %}
+												</form>
+											</div>
+										</div>
+									</div>
+
+									<div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+
+									
+							</div>
+							<div class="col-xs-12 col-sm-6 col-sm-offset-2">
+									<span><h1 style="display: inline-block;">{{ user.username }}&nbsp;</h1><h4 style="display: inline-block;"><b>(<a href="">Edit</a>)</b></h4></span>
+									<div class="row">
+											<div class="col-xs-12 item">
+												昵称：{{ user.profile.nickname }}
+											</div>
+											<div class="col-xs-12 item">
+												uid：{{ user.profile.uid }}
+											</div>
+											<div class="col-xs-12 item">
+												姓：{{ user.last_name }}
+											</div>
+											<div class="col-xs-12 item">
+												名：{{ user.first_name }}
+											</div>
+											<div class="col-xs-12 item">
+												性别：{{ user.profile.sex }}
+											</div>
+											<div class="col-xs-12 item">
+												生日：{{ user.profile.birth }}
+											</div>
+											<div class="col-xs-12 item">
+												所在地：{{ user.profile.address }}
+											</div>
+											<div class="col-xs-12 item">
+												工作单位：{{ user.profile.org }}
+											</div>
+											<div class="col-xs-12 item">
+												职位：{{ user.profile.job }}
+											</div>
+											<div class="col-xs-12 item">
+												加入日期：{{ user.profile.join_date }}
+											</div>
+											<div class="col-xs-12 item">
+												上次登录：{{ user.profile.mod_date }}
+											</div>
+										
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+{% endblock %}

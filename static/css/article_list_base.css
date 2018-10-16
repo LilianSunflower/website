@@ -1,0 +1,27 @@
+.title {
+	margin-left: 5px;
+}
+
+.article:not(:last-child) {
+	margin-bottom: 1em;
+	border-bottom: 1px solid #DDDDDD;
+	padding-bottom: 1em;
+	
+}
+
+.articles-info {
+	margin-top: 15px;
+}
+
+.article-info {
+	margin-right: 10px;
+}
+
+.article-icon {
+	margin-right: 5px;
+}
+
+.article-detail {
+	margin: 10px 0 10px;
+	text-indent: 2em;
+}

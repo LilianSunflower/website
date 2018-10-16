@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{# 页面标题 #}
+{% block title %}{% endblock %}
+
+{% block head_extends %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/article_list_base.css' %}">
+{% endblock %}
+
+{% block nav %}
+	class="active"
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<span class="h4 title">
+							{% block type_title %}{% endblock %}
+							<span class="small">
+								共 {% block article_length %}{% endblock %} 篇
+							</span>
+						</span>
+					</div>
+					<div class="panel-body article">	  
+					    {% for article in articles %}
+					    <div class="article">
+						    <h3><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></h3>
+						    <div class="articles-info">
+							    <span class="article-info"><span class="glyphicon glyphicon-tag article-icon" aria-hidden="true"></span>{{ article.article_type }}</span>
+							    <span class="article-info"><span class="glyphicon glyphicon-time article-icon" aria-hidden="true"></span>{{ article.created_time|date:"Y-m-d" }}</span>
+							    <span class="article-info">阅读({{ article.get_read_num }})</span>
+						    </div>
+						        <p class="article-detail">{{ article.content|striptags|truncatechars:200 }}</p>
+						</div>
+					    {% empty %} 
+					        <p>-- 暂无博客，敬请期待  --</p>
+					    {% endfor %}
+					</div>
+					<div aria-label="Page navigation">
+						 <ul class="pagination">
+						    {% if articles.has_previous %}
+						    	<li>
+						      		<a href="?page={{ articles.previous_page_number }}" aria-label="Previous">
+						        	<span aria-hidden="true">&laquo;</span>
+						      		</a>
+						      	</li>
+						     {% else %}
+						     	<li class="disabled">
+						      		<a href="#" aria-label="Previous">
+						        	<span aria-hidden="true">&laquo;</span>
+						      		</a>
+						      	</li>
+						    {% endif %}
+						    {% for page in page_list %}
+						    	{% ifequal page page_num %}
+						    		<li class="active"><a href="#">{{ page }}<span class="sr-only">(current)</span></a></li>
+						    	{% else %}
+						    		{% ifequal page '...' %}
+							    		<li class="disabled"><a href="#">{{ page }}<span class="sr-only">(current)</span></a></li>
+							    	{% else %}
+							    		<li><a href="?page={{ page }}">{{ page }}</a></li>
+							    	{% endifequal %}
+						    	{% endifequal %}
+						    {% empty %}
+						    	<li class="active"><a href="#">1</a></li>
+						    {% endfor %}
+						    {% if articles.has_next %}
+						    	<li>
+							      <a href="?page={{ articles.next_page_number }}" aria-label="Next">
+							        <span aria-hidden="true">&raquo;</span>
+							      </a>
+							    </li>
+							{% else %}
+							    <li class="disabled">
+						      		<a href="#" aria-label="Next">
+						        	<span aria-hidden="true">&raquo;</span>
+						      		</a>
+						      	</li>
+						    {% endif %}
+						 </ul>
+					</div>
+				</div>
+			</div>
+			<div class="hidden-xs col-sm-4 col-md-3 col-lg-2">
+				<div class="panel panel-default">
+					<div class="panel-heading">博文分类</div>
+						<!-- List group -->
+						<ul class="list-group">
+							{% for type in types %}
+								<li class="list-group-item"><a href="{% url 'article_type' type.pk %}">{{ type }}({{ type.article_count }})</a></li>
+						    {% empty %}
+						    	<li class="list-group-item">暂无分类</li>
+						    {% endfor %}
+					  	</ul>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">日期归档</div>
+						<!-- List group -->
+						<ul class="list-group">
+							{% for date, article_count_date in dates.items %}
+								<li class="list-group-item"><a href="{% url 'article_date' date.year date.month %}">{{ date|date:'Y年m月' }}({{ article_count_date }})</a></li>
+						    {% empty %}
+						    	<li class="list-group-item">暂无日期</li>
+						    {% endfor %}
+						 </ul>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'article_list_base.html' %}
+{% load staticfiles %}
+
+{# 页面标题 #}
+{% block title %}
+    {{ type }}
+{% endblock %}
+
+
+{% block type_title %}
+	{{ type }}
+{% endblock %}
+
+{% block article_length %}
+	{{ articles.paginator.count }}	
+{% endblock %}

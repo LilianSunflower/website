@@ -1,0 +1,15 @@
+{% extends 'article_list_base.html' %}
+{% load staticfiles %}
+
+{# 页面标题 %}
+{% block title %}
+    全部博文
+{% endblock %}
+
+{% block type_title %}
+	全部博文
+{% endblock %}
+
+{% block article_length %}
+	{{ articles.paginator.count }}	
+{% endblock %}

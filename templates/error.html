@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{# 页面标题 #%}
+{% block title %}
+    登录错误
+{% endblock %}
+
+{% block head_extends %}
+
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+	{{ message }} <a href="{{ redirect_to }}">返回</a>
+{% endblock %}
